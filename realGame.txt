@@ -1,0 +1,123 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+public class realGame
+{
+    public static void main(String [] args)
+    {
+        final int MOVIE_NUM = 30;//const
+        String [] movies = new String[MOVIE_NUM];//new 30 elements
+        int index = 0;
+        int numSpaces = 0;
+        int misGuess = 0;
+        String guess;
+        boolean done = false;
+        boolean miss = true;
+
+        //File file = new File("c:\\temp\\movies.txt");
+        File file = new File("C://Users//keaga//OneDrive//Desktop//Lab_two//movies.txt");
+
+        try 
+        {
+            Scanner scanner = new Scanner(file);//Scanner file not scanner.in because reading from file
+            while (scanner.hasNextLine()) {
+            movies[index] = scanner.nextLine();
+            index++;
+        }
+        } catch (FileNotFoundException e) {
+        System.out.println("File does not exist!");
+        }
+
+        Random rand = new Random();
+        int i = rand.nextInt(30);//so 0-29
+        String title = movies[i];
+        String ctitle = title.toLowerCase();
+        //prints title
+        //System.out.println("Movie: " + title);
+
+        //Be able to read and record the number of letters
+        //identifes the spaces
+
+        StringBuilder titleGuess = new StringBuilder("");
+        for (int k = 0; k < title.length(); k++)
+        {
+            if (title.charAt(k) != ' ')
+            {
+                titleGuess.append('_');
+            }
+            else
+            {
+                titleGuess.append(' ');
+                numSpaces++;
+            }
+        }
+
+        System.out.println("The title has " + (title.length() - numSpaces) + " letters");
+        //prints dashes ____ and spaces
+        System.out.println(titleGuess);
+        
+        
+        while (done == false && misGuess <= 4)//gives 5 chances
+        {
+            
+            //System.out.println("\nYou have " + misGuess + " mis-guess");
+            Scanner keyboard = new Scanner(System.in);
+
+
+            System.out.print("\nGuess: ");
+            guess = keyboard.nextLine();
+            guess = guess.toLowerCase();
+            //System.out.print(guess);//just a flag, makes sure .toLowerCase() is working
+            //prints dashes ____ and spaces
+            if (guess.equalsIgnoreCase(title))
+            {
+                System.out.println("\nYou got it!!\n"); 
+                done = true;
+
+                break;
+            }
+            else if(!done)
+            {
+                miss = true;
+            //sees what letters are in movie title string
+                for(int titleNum_Letters=0; titleNum_Letters < title.length(); titleNum_Letters++)
+                {
+                    //titleNum_Letters is an integer because it records the number, how to record the 
+                    String str = ctitle.substring(titleNum_Letters, titleNum_Letters+1);
+                    //System.out.println("i = title.charAt(titleNum_Letters); is: " + i);
+                    String s=String.valueOf(i);
+
+                    if (str.equals(guess))
+                    {
+                        titleGuess.setCharAt(titleNum_Letters,guess.charAt(0));
+        
+                        miss = false;
+                    }
+                    if (titleGuess.toString().equals(ctitle)){
+                        System.out.println("\nYou got it!!\n");
+                        System.out.println("Movie: " + title);
+                        done = true;
+                        break;
+                    }
+                }
+                System.out.println(titleGuess);
+                if(miss){
+                    misGuess++;
+                    //System.out.println(titleGuess);
+                    System.out.println("\nYou have "+ misGuess + " mis-guesses");
+                    if(misGuess == 5)
+                    {
+                        System.out.println("Game Over!");
+                    }
+                }
+    
+            }
+
+        }
+        System.out.println("Movie: " + title);
+        
+    }
+
+}
